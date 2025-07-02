@@ -13,6 +13,12 @@
         style="width: 250px; height: 250px;"
         class="animated-logo q-mb-md"
       >
+       <img
+        alt="Quasar logo"
+        src="~assets/quasar-logo-vertical.svg"
+        style="width: 250px; height: 250px;"
+        class="animated-logo q-mb-md"
+      >
 
       <div class="text-h3 text-weight-bold text-center q-mt-lg">
         Welcome to Quasar!
