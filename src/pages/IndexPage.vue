@@ -1,46 +1,36 @@
 <template>
-  <q-page class="flex flex-center q-pa-md bg-dark text-white">
-    <div class="column items-center q-gutter-y-lg q-py-xl">
-      <img
-        alt="Quasar logo"
-        src="~assets/quasar-logo-vertical.svg"
-        style="width: 250px; height: 250px;"
-        class="animated-logo q-mb-md"
-      >
-      <img
-        alt="Quasar logo"
-        src="~assets/quasar-logo-vertical.svg"
-        style="width: 250px; height: 250px;"
-        class="animated-logo q-mb-md"
-      >
-       <img
-        alt="Quasar logo"
-        src="~assets/quasar-logo-vertical.svg"
-        style="width: 250px; height: 250px;"
-        class="animated-logo q-mb-md"
-      >
-
-      <div class="text-h3 text-weight-bold text-center q-mt-lg">
-        Welcome to Quasar!
-      </div>
-      <div class="text-h6 text-center text-grey-4 q-mb-lg" style="max-width: 600px;">
-        Crafting amazing apps with elegant and powerful solutions.
-      </div>
-
-      <q-btn
-        label="EXPLORE MORE"
-        color="primary"
-        icon="arrow_forward"
-        size="lg"
-        class="q-mt-md"
-        to="/about"
-        glossy
-        outline
+  <div class="q-pa-md" style="max-width: 400px">
+    <q-form
+      @submit="onSubmit"
+      @reset="onReset"
+      class="q-gutter-md"
+    >
+      <q-input
+        filled
+        v-model="name"
+        label="Your name *"
+        hint="Name and surname"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
-    </div>
-
-    <div class="background-pulse-enhanced"></div>
-  </q-page>
+      <q-input
+        filled
+        type="number"
+        v-model="age"
+        label="Your age *"
+        lazy-rules
+        :rules="[
+          val => val !== null && val !== '' || 'Please type your age',
+          val => val > 0 && val < 100 || 'Please type a real age'
+        ]"
+      />
+      <q-toggle v-model="accept" label="I accept the license and terms" />
+      <div>
+        <q-btn label="Submit" type="submit" color="primary"/>
+        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      </div>
+    </q-form>
+  </div>
 </template>
 
 <script>
