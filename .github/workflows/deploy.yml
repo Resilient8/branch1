@@ -1,0 +1,62 @@
+# ชื่อของ Workflow ที่จะแสดงในหน้า Actions ของ GitHub
+name: Build and Deploy to GitHub Pages
+
+# กำหนดว่าจะให้ Workflow ทำงานเมื่อไหร่
+on:
+  # ทำงานเมื่อมีการ push โค้ดไปที่ branch 'main'
+  push:
+    branches: [ "main" ]
+  # อนุญาตให้สั่งรัน workflow นี้เองได้จากหน้า Actions
+  workflow_dispatch:
+
+# กำหนดสิทธิ์ให้ workflow สามารถเขียนข้อมูลสำหรับการ deploy ได้
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ขั้นตอนการทำงานทั้งหมด
+jobs:
+  # ชื่องาน
+  deploy:
+    # กำหนดสภาพแวดล้อมเป็น github-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # เลือกระบบปฏิบัติการที่จะใช้รัน
+    runs-on: ubuntu-latest
+    # ขั้นตอนย่อยๆ
+    steps:
+      # 1. เช็คเอาท์โค้ดจาก repository
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2. ติดตั้ง Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # หรือเวอร์ชันที่คุณใช้
+          cache: 'npm'
+
+      # 3. ติดตั้ง Dependencies ของโปรเจกต์
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. รันคำสั่ง build ของ Quasar
+      - name: Build Project
+        run: npm run build
+
+      # 5. ตั้งค่าสำหรับ GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      # 6. อัปโหลดไฟล์ที่ build แล้ว (จากโฟลเดอร์ dist/spa)
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './dist/spa' # ตรวจสอบให้แน่ใจว่า path นี้ถูกต้องสำหรับ Quasar project
+
+      # 7. Deploy ไปยัง GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
